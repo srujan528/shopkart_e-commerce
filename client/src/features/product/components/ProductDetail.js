@@ -81,8 +81,9 @@ export default function ProductDetail() {
         product: product.id,
         quantity: 1,
         color: product.colors[selectedColor],
-        size: product.sizes[selectedSize],
+        size: parseInt(product.sizes[selectedSize]),
       };
+
       dispatch(addToCartAsync(newItem));
       toast.success(`${product.title} added to cart`);
     } else {
