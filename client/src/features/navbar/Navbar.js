@@ -15,6 +15,7 @@ const navigation = [
   { name: "Shop", link: "/" },
   { name: "Deals", link: "/?deals=true" },
   { name: "New Arrivals", link: "/?sort=newest" },
+  { name: "👑 Admin Dashboard", link: "/admin" },
 ];
 
 const userNavigation = [
@@ -215,15 +216,16 @@ function NavBar({ children }) {
                         </Transition>
                       </Menu>
 
-                      {/* Admin Links if admin */}
+                      {/* Permanent Admin Dashboard Link */}
+                      <Link
+                        to="/admin"
+                        className="text-xs font-bold text-white bg-rose-600 px-3 py-1 rounded-lg shadow-xs hover:bg-rose-700 transition-all flex items-center gap-1 ml-2"
+                      >
+                        👑 Admin Dashboard
+                      </Link>
+
                       {userInfo?.role === "admin" && (
                         <div className="flex items-center gap-2">
-                          <Link
-                            to="/admin"
-                            className="text-xs font-bold text-white bg-rose-600 px-3 py-1.5 rounded-lg shadow-xs hover:bg-rose-700 transition-colors flex items-center gap-1.5"
-                          >
-                            👑 Admin Dashboard
-                          </Link>
                           <Link
                             to="/admin/Orders"
                             className="text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors hidden sm:flex items-center gap-1.5"
