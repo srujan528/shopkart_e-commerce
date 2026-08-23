@@ -5,8 +5,6 @@
   "description": "ShopKart Full Stack MERN E-Commerce Store",
   "scripts": {
     "start": "npm start --prefix client",
-    "build": "npm run build --prefix client",
-    "install:all": "npm install --prefix client && npm install --prefix server",
-    "vercel-build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client"
+    "build": "cd server && npm install && cd ../client && npm install && npm run build"
   }
 }

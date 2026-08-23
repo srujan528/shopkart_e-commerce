@@ -1,38 +1,14 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "cd server && npm install && cd ../client && npm install && npm run build",
+  "outputDirectory": "client/build",
+  "rewrites": [
     {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "source": "/(products|brands|category|users|auth|mail|cart|orders|payment)(.*)",
+      "destination": "/api"
     },
     {
-      "src": "server/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(products|brands|category|users|auth|mail|cart|orders|payment)(.*)",
-      "dest": "server/index.js"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "client/static/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "client/favicon.ico"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "client/manifest.json"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "client/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
