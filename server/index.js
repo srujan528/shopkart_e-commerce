@@ -83,6 +83,18 @@ app.use("/cart", isAuthenticated, CartRouter);
 app.use("/orders", isAuthenticated, OrderRouter);
 app.use("/payment", isAuthenticated, PaymentRouter);
 
+function toBuffer(val) {
+  if (!val) return Buffer.alloc(0);
+  if (Buffer.isBuffer(val)) return val;
+  if (val.buffer && Buffer.isBuffer(val.buffer)) return val.buffer;
+  if (val._bsontype === "Binary" && val.buffer) return Buffer.from(val.buffer);
+  try {
+    return Buffer.from(val);
+  } catch (e) {
+    return Buffer.alloc(0);
+  }
+}
+
 passport.use(
   "local",
   new LocalStrategy({ usernameField: "email" }, async function (
@@ -100,9 +112,8 @@ passport.use(
         return done(null, false, { message: "Incorrect email or password" });
       }
 
-      const userSaltBuf = Buffer.isBuffer(user.salt)
-        ? user.salt
-        : Buffer.from(user.salt);
+      const userSaltBuf = toBuffer(user.salt);
+      const userPasswordBuf = toBuffer(user.password);
 
       crypto.pbkdf2(
         password,
@@ -115,11 +126,8 @@ passport.use(
             return done(err);
           }
           try {
-            const userPasswordBuf = Buffer.isBuffer(user.password)
-              ? user.password
-              : Buffer.from(user.password);
-
             if (
+              userPasswordBuf.length === 0 ||
               userPasswordBuf.length !== hashedPassword.length ||
               !crypto.timingSafeEqual(userPasswordBuf, hashedPassword)
             ) {
