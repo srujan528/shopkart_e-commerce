@@ -481,11 +481,12 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
 }
 
 function ProductGrid({ products }) {
+  const items = Array.isArray(products) ? products : (products?.data || []);
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          {products.data?.map((product) => (
+      <div className="mx-auto max-w-2xl px-2 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+        <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          {items.map((product) => (
             <div key={product.id} className="">
               <Link to={`/product-detail/${product.id}`}>
                 <div className="group relative border-solid border-2 p-2 border-gray-200 rounded-t-lg border-b-0">

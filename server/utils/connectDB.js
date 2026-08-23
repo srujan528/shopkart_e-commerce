@@ -56,13 +56,12 @@ async function connectDB() {
       }
     }
 
-    // Auto-ensure Admin User exists in connected database
+    // Auto-ensure Admin Users exist in connected database
     try {
-      const adminEmail = "admin@gmail.com";
+      const adminEmails = ["admin@gmail.com", "srujanhiremath519@gmail.com"];
       const adminPassword = "admin1234";
 
-      const adminUser = await User.findOne({ email: adminEmail });
-      if (!adminUser) {
+      for (const email of adminEmails) {
         const salt = crypto.randomBytes(16);
         const hashedPassword = await new Promise((resolve, reject) => {
           crypto.pbkdf2(adminPassword, salt, 310000, 32, "sha256", (err, key) => {
@@ -71,17 +70,21 @@ async function connectDB() {
           });
         });
 
-        await User.create({
-          name: "ShopKart Admin",
-          email: adminEmail,
-          password: hashedPassword,
-          salt: salt,
-          role: "admin",
-          phoneNumber: "9999999999",
-          addresses: [],
-        });
-        console.log("Auto-seeded admin user: admin@gmail.com / admin1234");
+        await User.findOneAndUpdate(
+          { email: email },
+          {
+            name: email.includes("srujan") ? "Srujan Hiremath (Admin)" : "ShopKart Admin",
+            email: email,
+            password: hashedPassword,
+            salt: salt,
+            role: "admin",
+            phoneNumber: "9999999999",
+            addresses: [],
+          },
+          { upsert: true, new: true }
+        );
       }
+      console.log("Auto-seeded admin users: admin@gmail.com & srujanhiremath519@gmail.com with admin1234");
     } catch (seedErr) {
       console.log("Admin auto-seed notice:", seedErr.message);
     }

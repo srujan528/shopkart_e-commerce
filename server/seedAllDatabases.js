@@ -12,7 +12,7 @@ const dbUris = [
   "mongodb+srv://srujan:srujan528@cluster0.mongodb.net/ecommerce?retryWrites=true&w=majority"
 ];
 
-const email = "admin@gmail.com";
+const adminEmails = ["admin@gmail.com", "srujanhiremath519@gmail.com"];
 const password = "admin1234";
 
 async function seedDatabase(uri) {
@@ -21,27 +21,32 @@ async function seedDatabase(uri) {
     console.log(`Connected to: ${uri.split("@")[1]}`);
 
     const UserModel = conn.model("User", User.schema);
-    await UserModel.deleteMany({ email: { $in: [email, "admin@shopkart.com", "srujanhiremath519@gmail.com"] } });
 
-    const salt = crypto.randomBytes(16);
-    const hashedPassword = await new Promise((resolve, reject) => {
-      crypto.pbkdf2(password, salt, 310000, 32, "sha256", (err, derivedKey) => {
-        if (err) reject(err);
-        else resolve(derivedKey);
+    for (const email of adminEmails) {
+      const salt = crypto.randomBytes(16);
+      const hashedPassword = await new Promise((resolve, reject) => {
+        crypto.pbkdf2(password, salt, 310000, 32, "sha256", (err, derivedKey) => {
+          if (err) reject(err);
+          else resolve(derivedKey);
+        });
       });
-    });
 
-    await UserModel.create({
-      name: "ShopKart Admin",
-      email: email,
-      password: hashedPassword,
-      salt: salt,
-      role: "admin",
-      phoneNumber: "9999999999",
-      addresses: [],
-    });
+      await UserModel.findOneAndUpdate(
+        { email: email },
+        {
+          name: email.includes("srujan") ? "Srujan Hiremath" : "ShopKart Admin",
+          email: email,
+          password: hashedPassword,
+          salt: salt,
+          role: "admin",
+          phoneNumber: "9999999999",
+          addresses: [],
+        },
+        { upsert: true, new: true }
+      );
+      console.log(`ADMIN_UPSERT_SUCCESS for ${email} on ${uri.split("@")[1]}: password=${password}`);
+    }
 
-    console.log(`ADMIN_SEEDED_SUCCESS for ${uri.split("@")[1]}: email=${email}, password=${password}`);
     await conn.close();
   } catch (err) {
     console.error(`Error seeding ${uri.split("@")[1]}:`, err.message);

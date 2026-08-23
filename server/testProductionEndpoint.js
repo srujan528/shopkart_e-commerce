@@ -1,10 +1,10 @@
 async function testProdLogin() {
-  console.log("Sending POST request to https://shopkart-e-commerce.vercel.app/auth/login ...");
+  console.log("Sending POST request for srujanhiremath519@gmail.com ...");
   try {
     const res = await fetch("https://shopkart-e-commerce.vercel.app/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "admin@gmail.com", password: "admin1234" }),
+      body: JSON.stringify({ email: "srujanhiremath519@gmail.com", password: "admin1234" }),
     });
 
     console.log("Response Status:", res.status, res.statusText);

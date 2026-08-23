@@ -339,9 +339,9 @@ export default function ProductList() {
                 <div className="mt-5 flex flex-wrap items-center gap-3.5">
                   <Link
                     to={`/product-detail/${
-                      products.data?.find((p) =>
+                      (Array.isArray(products) ? products : (products?.data || [])).find((p) =>
                         p.title.toLowerCase().includes(megaDeals[currentSlide].searchKey)
-                      )?.id || products.data?.[currentSlide % (products.data?.length || 1)]?.id
+                      )?.id || (Array.isArray(products) ? products : (products?.data || []))[currentSlide % ((Array.isArray(products) ? products : (products?.data || [])).length || 1)]?.id
                     }`}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-2.5 rounded-lg shadow-md transition-all flex items-center gap-2 cursor-pointer"
                   >
@@ -364,9 +364,9 @@ export default function ProductList() {
               {/* Right Column: Featured Image Showcase */}
               <Link
                 to={`/product-detail/${
-                  products.data?.find((p) =>
+                  (Array.isArray(products) ? products : (products?.data || [])).find((p) =>
                     p.title.toLowerCase().includes(megaDeals[currentSlide].searchKey)
-                  )?.id || products.data?.[currentSlide % (products.data?.length || 1)]?.id
+                  )?.id || (Array.isArray(products) ? products : (products?.data || []))[currentSlide % ((Array.isArray(products) ? products : (products?.data || [])).length || 1)]?.id
                 }`}
                 className="relative w-full lg:w-72 h-56 sm:h-64 flex items-center justify-center bg-slate-900/60 rounded-xl border border-slate-800 p-3 shadow-lg group-hover:border-blue-500/50 transition-all cursor-pointer"
               >
@@ -465,7 +465,7 @@ export default function ProductList() {
                 View All Categories ➔
               </span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3.5">
               {[
                 { name: "Smartphones", value: "smartphones", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop&q=80" },
                 { name: "Laptops", value: "laptops", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&auto=format&fit=crop&q=80" },
@@ -753,11 +753,13 @@ function ProductGrid({ products, status }) {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
 
-  const displayedProducts = products.data?.filter((product) => {
+  const items = Array.isArray(products) ? products : (products?.data || []);
+
+  const displayedProducts = items.filter((product) => {
     if (!searchQuery) return true;
     return (
-      product.title.toLowerCase().includes(searchQuery) ||
-      product.description.toLowerCase().includes(searchQuery) ||
+      product.title?.toLowerCase().includes(searchQuery) ||
+      product.description?.toLowerCase().includes(searchQuery) ||
       product.brand?.toLowerCase().includes(searchQuery) ||
       product.category?.toLowerCase().includes(searchQuery)
     );
@@ -772,7 +774,7 @@ function ProductGrid({ products, status }) {
             <span className="text-[11px] text-slate-500 font-normal">({displayedProducts?.length || 0} products found)</span>
           </div>
         )}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {status === "loading" ? (
             <div className="col-span-full flex justify-center py-12">
               <RotatingLines
