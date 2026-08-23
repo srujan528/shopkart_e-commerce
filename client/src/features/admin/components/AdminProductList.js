@@ -490,43 +490,34 @@ function ProductGrid({ products }) {
             <div key={product.id} className="">
               <Link to={`/product-detail/${product.id}`}>
                 <div className="group relative border-solid border-2 p-2 border-gray-200 rounded-t-lg border-b-0">
-                  <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                  <div className="h-36 sm:h-48 w-full overflow-hidden rounded-md bg-slate-50 flex items-center justify-center p-1">
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                      className="h-full w-full object-contain object-center"
                     />
                   </div>
-                  <div className="mt-4 flex justify-between">
-                    <div className="w-3/4">
-                      <h3 className="text-sm text-gray-700">
-                        <div href={product.thumbnail}>
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0"
-                          />
-                          <p className="truncate overflow-clip">
-                            {product.title}
-                          </p>
-                        </div>
-                      </h3>
-                      <div className="flex items-center gap-1 my-2">
-                        <StarIcon
-                          className="w-6 h-6 inline"
-                          fill="#FFD700"
-                        ></StarIcon>
-                        <span className="text-sm text-gray-500">
+                  <div className="mt-2 flex flex-col justify-between flex-1 gap-1">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-1">
+                      {product.title}
+                    </h3>
+                    <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center gap-1">
+                        <StarIcon className="w-3.5 h-3.5 text-amber-400" fill="currentColor" />
+                        <span className="text-[11px] font-semibold text-slate-600">
                           {product.rating}
                         </span>
                       </div>
-                    </div>
-                    <div className="w-1/4 flex flex-col items-end gap-1">
-                      <p className="text-sm block font-medium text-gray-900">
-                        ₹ {product.discountedPrice}
-                      </p>
-                      <p className="text-sm block line-through font-medium text-gray-400">
-                        ₹ {product.price}
-                      </p>
+                      <div className="text-right">
+                        <div className="text-xs sm:text-sm font-extrabold text-slate-900">
+                          ₹{product.discountedPrice}
+                        </div>
+                        {product.price && (
+                          <div className="text-[10px] text-slate-400 line-through">
+                            ₹{product.price}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   {product.deleted && (

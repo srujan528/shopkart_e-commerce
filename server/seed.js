@@ -308,10 +308,10 @@ const productsData = [
 async function seedDatabase() {
   try {
     console.log("Connecting to MongoDB...");
-    const mongoUri = process.env.MONGO_URL;
-    const options = process.env.DB_NAME ? { dbName: process.env.DB_NAME } : {};
-    await mongoose.connect(mongoUri, options);
-    console.log("Connected successfully to MongoDB.");
+    const PRIMARY_ATLAS_URI = "mongodb+srv://srujanhiremath519_db_user:srujan%40123@placementportal.rkhdyck.mongodb.net/shopkart?appName=PlacementPortal";
+    const mongoUri = process.env.MONGO_URL && process.env.MONGO_URL.startsWith("mongodb") ? process.env.MONGO_URL : PRIMARY_ATLAS_URI;
+    await mongoose.connect(mongoUri, { dbName: "shopkart" });
+    console.log("Connected successfully to MongoDB Atlas.");
 
     // Seed Categories
     console.log("Seeding Categories...");
