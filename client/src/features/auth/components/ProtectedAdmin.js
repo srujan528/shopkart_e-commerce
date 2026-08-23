@@ -6,13 +6,14 @@ import { selectUserInfo } from "../../user/userSlice";
 function ProtectedAdmin({ children }) {
   const user = useSelector(selectLoggedInUser);
   const userInfo = useSelector(selectUserInfo);
-  const userChecked = useSelector(selectUserChecked);
 
   if (!user) {
     return <Navigate to="/login" replace={true}></Navigate>;
   }
 
-  if (userInfo?.role !== "admin" && userChecked) {
+  const role = userInfo?.role || user?.role;
+
+  if (role && role !== "admin") {
     return <Navigate to="/" replace={true}></Navigate>;
   }
   return children;
