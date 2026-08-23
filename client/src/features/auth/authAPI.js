@@ -3,7 +3,7 @@ import { PATH } from "../../app/constants";
 export function createUser(userData) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(PATH + "/auth/signup/", {
+      const response = await fetch(PATH + "/auth/signup", {
         method: "POST",
         body: JSON.stringify(userData),
         headers: { "content-type": "application/json" },
@@ -13,9 +13,9 @@ export function createUser(userData) {
 
       if (response.ok) {
         resolve({ data });
+      } else {
+        reject(data);
       }
-
-      reject(data);
     } catch (error) {
       reject(error);
     }
@@ -25,7 +25,7 @@ export function createUser(userData) {
 export function logginUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(PATH + "/auth/login/", {
+      const response = await fetch(PATH + "/auth/login", {
         method: "POST",
         body: JSON.stringify(loginInfo),
         headers: { "content-type": "application/json" },
@@ -36,7 +36,7 @@ export function logginUser(loginInfo) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const data = await response.text();
+        const data = await response.json().catch(() => ({ message: "Login failed" }));
         reject(data);
       }
     } catch (error) {
@@ -45,10 +45,10 @@ export function logginUser(loginInfo) {
   });
 }
 
-export function checkAuth(loginInfo) {
+export function checkAuth() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(PATH + "/auth/check/", {
+      const response = await fetch(PATH + "/auth/check", {
         method: "GET",
         credentials: "include",
       });
@@ -57,7 +57,7 @@ export function checkAuth(loginInfo) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const data = await response.text();
+        const data = await response.json().catch(() => ({ message: "Unauthorized" }));
         reject(data);
       }
     } catch (error) {
@@ -69,16 +69,16 @@ export function checkAuth(loginInfo) {
 export function signOut() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(PATH + "/auth/logout/", {
+      const response = await fetch(PATH + "/auth/logout", {
         method: "GET",
         credentials: "include",
       });
 
       if (response.ok) {
         resolve({ data: "success" });
+      } else {
+        reject({ data: "error" });
       }
-
-      reject({ data: "error" });
     } catch (error) {
       reject(error);
     }

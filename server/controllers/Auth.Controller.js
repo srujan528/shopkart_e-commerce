@@ -9,7 +9,7 @@ export const createUser = async (req, res) => {
 
     user = await User.findOne({ email: req.body.email });
     if (user) {
-      return res.status(401).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "Email already registered" });
     }
 
     const salt = crypto.randomBytes(16);
@@ -34,9 +34,13 @@ export const createUser = async (req, res) => {
           user = await User.create(req.body);
           await user.save();
 
-          welcomeMail({ email: user.email, name: user.name });
+          try {
+            welcomeMail({ email: user.email, name: user.name });
+          } catch (mailErr) {
+            console.log("Welcome email notification:", mailErr.message);
+          }
 
-          return res.status(201).json({ message: "User created successfully" });
+          return res.status(201).json({ id: user._id, email: user.email, role: user.role });
         } catch (error) {
           return res.status(400).json({ message: error.message });
         }
@@ -49,15 +53,16 @@ export const createUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     res
       .cookie("jwt", req.user.token, {
         expires: new Date(Date.now() + 86400000),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        secure: isProduction,
+        sameSite: isProduction ? "None" : "Lax",
       })
       .status(201)
-      .json({ token: req.user.token });
+      .json({ id: req.user.id, role: req.user.role, token: req.user.token });
   } catch (error) {
     if (!res.headersSent) {
       return res.status(500).json({ message: "Internal Server Error" });
@@ -75,12 +80,13 @@ export const checkAuth = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     return res
       .cookie("jwt", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        secure: isProduction,
+        sameSite: isProduction ? "None" : "Lax",
       })
       .status(201)
       .json({ message: "User logged out successfully" });
