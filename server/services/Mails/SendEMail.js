@@ -12,7 +12,7 @@ export const sendEMail = async ({ to, subject, text, html }) => {
     });
 
     const info = await transporter.sendMail({
-      from: `"E Kart" <${process.env.EMAIL_ID}>'`, // sender address
+      from: `"ShopKart" <${process.env.EMAIL_ID}>`, // sender address
       to, // recipient address
       subject, // Subject line
       text, // plain text body

@@ -29,7 +29,7 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: `${process.env.CLIENT_URL}`,
+    origin: process.env.CLIENT_URL || true,
     credentials: true,
   })
 );
@@ -138,6 +138,10 @@ passport.deserializeUser(function (user, cb) {
 
 connectDB();
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+if (process.env.PORT && !process.env.VERCEL) {
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
+}
+
+export default app;

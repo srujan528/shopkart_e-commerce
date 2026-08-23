@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    },
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(products|brands|category|users|auth|mail|cart|orders|payment)(.*)",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "client/static/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "client/favicon.ico"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "client/manifest.json"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/index.html"
+    }
+  ]
+}

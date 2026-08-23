@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+/.pnp
+.pnp.js
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+client/.env
+
+# Production Builds & Outputs
+build/
+client/build/
+dist/
+/.vercel
+
+# Logs & Testing
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/coverage
+
+# Miscellaneous
+.DS_Store
+*.pem

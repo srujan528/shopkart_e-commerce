@@ -116,7 +116,7 @@ function Checkout() {
         key: razorpayID, // Razorpay Key ID
         amount: data.totalAmount, // Amount is in the smallest currency unit (e.g., paise)
         currency: "INR", // Currency
-        name: "E Kart", // Your business name
+        name: "ShopKart", // Your business name
         description: "Thanks for shopping with us",
         image: "../../logo.png", // Replace with your logo URL
         order_id: paymentId, // The payment ID returned by the server
