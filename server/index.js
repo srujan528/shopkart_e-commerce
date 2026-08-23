@@ -27,6 +27,10 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || "shopkart_jwt_secret_key_2026";
+const SESSION_SECRET = process.env.SESSION_SECRET || "shopkart_session_secret_key_2026";
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL || true,
@@ -34,20 +38,30 @@ app.use(
   })
 );
 
+// Auto-connect to DB for every request (Serverless friendly)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (e) {
+    console.error("DB middleware error:", e);
+  }
+  next();
+});
+
 // Middleware to parse URL-encoded data
-app.use(express.urlencoded({ extended: true })); // This allows you to parse form data
-app.use(express.json()); // This allows you to parse JSON data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static("build"));
 app.use(cookieParser());
 
 const opts = {
   jwtFromRequest: cookiesExtractor,
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: JWT_SECRET,
 };
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -91,7 +105,7 @@ passport.use(
               message: "Incorrect email or password",
             });
           } else {
-            const token = jwt.sign(sanitizeUser(user), process.env.JWT_SECRET, {
+            const token = jwt.sign(sanitizeUser(user), JWT_SECRET, {
               expiresIn: "24h",
             });
 
