@@ -16,7 +16,7 @@ export default function UserOrders() {
   const orders = useSelector(selectUserOrders);
   const [page, setPage] = useState(1);
   const totalUserOrders = useSelector(selectTotalUserOrders);
-  const [sort, setSort] = useState({});
+  const [sort] = useState({});
   const status = useSelector(selectUserInfoStatus);
 
   const chooseColor = (status) => {

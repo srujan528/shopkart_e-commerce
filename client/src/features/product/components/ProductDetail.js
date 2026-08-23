@@ -29,10 +29,6 @@ import "react-toastify/dist/ReactToastify.css";
   theme="colored"
 />;
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function ProductDetail() {
   const params = useParams();
   const dispatch = useDispatch();

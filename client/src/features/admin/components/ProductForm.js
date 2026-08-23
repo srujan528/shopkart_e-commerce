@@ -170,48 +170,13 @@ function ProductForm() {
     toast.success("Size removed");
   };
 
-  useEffect(() => {
-    if (
-      getValues("colors").length === 0 &&
-      getValues("sizes").length === 0 &&
-      Object.keys(errors).length !== 0
-    ) {
-      setError("colors", {
-        type: "manual",
-        message: "Add at least one color",
-      });
-      setError("sizes", {
-        type: "manual",
-        message: "Add at least one size",
-      });
-    } else if (
-      getValues("colors").length === 0 &&
-      Object.keys(errors).length !== 0
-    ) {
-      setError("colors", {
-        type: "manual",
-        message: "Add at least one color",
-      });
-    } else if (
-      getValues("sizes").length === 0 &&
-      Object.keys(errors).length !== 0
-    ) {
-      setError("sizes", {
-        type: "manual",
-        message: "Add at least one size",
-      });
-    }
-  }, [
-    getValues,
-    setError,
-    errors,
-    getValues("colors").length,
-    getValues("sizes").length,
-  ]);
+  const colorsLength = getValues("colors")?.length || 0;
+  const sizesLength = getValues("sizes")?.length || 0;
+  const errorCount = Object.keys(errors).length;
 
   useEffect(() => {
-    if (Object.keys(errors).length !== 0) {
-      if (getValues("colors").length === 0 && getValues("sizes").length === 0) {
+    if (errorCount !== 0) {
+      if (colorsLength === 0 && sizesLength === 0) {
         setError("colors", {
           type: "manual",
           message: "Add at least one color",
@@ -220,39 +185,34 @@ function ProductForm() {
           type: "manual",
           message: "Add at least one size",
         });
-      } else if (getValues("colors").length === 0) {
+      } else if (colorsLength === 0) {
         setError("colors", {
           type: "manual",
           message: "Add at least one color",
         });
-      } else if (getValues("sizes").length === 0) {
+      } else if (sizesLength === 0) {
         setError("sizes", {
           type: "manual",
           message: "Add at least one size",
         });
       }
     }
-  }, [getValues, setError, errors]);
+  }, [getValues, setError, errors, colorsLength, sizesLength, errorCount]);
 
   useEffect(() => {
-    if (getValues("colors").length > 0 && getValues("sizes").length > 0) {
+    if (colorsLength > 0 && sizesLength > 0) {
       clearErrors("colors");
       clearErrors("sizes");
-    } else if (getValues("colors").length > 0) {
+    } else if (colorsLength > 0) {
       clearErrors("colors");
-    } else if (getValues("sizes").length > 0) {
+    } else if (sizesLength > 0) {
       clearErrors("sizes");
     }
-  }, [
-    clearErrors,
-    getValues("colors").length,
-    getValues("sizes").length,
-    getValues,
-  ]);
+  }, [clearErrors, colorsLength, sizesLength]);
 
   useEffect(() => {
     setOpenModal("");
-  }, [Object.keys(errors).length]);
+  }, [errorCount]);
 
   return (
     <>
