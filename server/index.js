@@ -91,7 +91,10 @@ passport.use(
     done
   ) {
     try {
-      const user = await User.findOne({ email: email });
+      const cleanEmail = email ? email.trim().toLowerCase() : "";
+      const user = await User.findOne({
+        email: { $regex: new RegExp("^" + cleanEmail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i") },
+      });
 
       if (!user || !user.salt || !user.password) {
         return done(null, false, { message: "Incorrect email or password" });

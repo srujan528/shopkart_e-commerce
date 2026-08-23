@@ -20,7 +20,7 @@ async function connectDB() {
       process.env.MONGO_URL ||
       process.env.MONGODB_URL ||
       process.env.DATABASE_URL ||
-      "mongodb+srv://srujan:srujan528@cluster0.mongodb.net/ecommerce?retryWrites=true&w=majority";
+      "mongodb+srv://srujanhiremath519_db_user:srujan%40123@placementportal.rkhdyck.mongodb.net/shopkart?appName=PlacementPortal";
 
     const options = process.env.DB_NAME ? { dbName: process.env.DB_NAME } : {};
 

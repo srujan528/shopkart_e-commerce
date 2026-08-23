@@ -49,7 +49,10 @@ export default function Login() {
             onSubmit={handleSubmit((data) => {
               dispatch(resetUserError());
               dispatch(
-                logginUserAsync({ email: data.email, password: data.password })
+                logginUserAsync({
+                  email: data.email?.trim()?.toLowerCase(),
+                  password: data.password,
+                })
               );
             })}
             className="space-y-6"
