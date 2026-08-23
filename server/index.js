@@ -100,9 +100,13 @@ passport.use(
         return done(null, false, { message: "Incorrect email or password" });
       }
 
+      const userSaltBuf = Buffer.isBuffer(user.salt)
+        ? user.salt
+        : Buffer.from(user.salt);
+
       crypto.pbkdf2(
         password,
-        user.salt,
+        userSaltBuf,
         310000,
         32,
         "sha256",
