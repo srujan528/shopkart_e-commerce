@@ -13,17 +13,28 @@ import { RotatingLines } from "react-loader-spinner";
 import { resetStockError } from "../order/orderSlice";
 import Modal from "../common/components/Modal";
 
+const getDiscountedPrice = (product) => {
+  if (!product) return 0;
+  if (typeof product.discountedPrice === "number") return product.discountedPrice;
+  if (typeof product.price === "number") {
+    return Math.round(product.price * (1 - (product.discountPercentage || 0) / 100));
+  }
+  return 0;
+};
+
 export default function Cart() {
   const dispatch = useDispatch();
   const status = useSelector(selectStatus);
   const [openModal, setOpenModal] = useState(null);
   const items = useSelector(selectItems);
   const cartLoaded = useSelector(selectCartLoaded);
-  const totalAmount = items.reduce(
-    (amount, item) => item.product.discountedPrice * item.quantity + amount,
+  const validItems = items.filter((item) => item && item.product);
+
+  const totalAmount = validItems.reduce(
+    (amount, item) => getDiscountedPrice(item.product) * (item.quantity || 1) + amount,
     0
   );
-  const totalItems = items.reduce((total, item) => item.quantity + total, 0);
+  const totalItems = validItems.reduce((total, item) => (item.quantity || 0) + total, 0);
 
   const handleQuantity = (e, item) => {
     dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
@@ -40,7 +51,7 @@ export default function Cart() {
 
   return (
     <>
-      {!items.length && cartLoaded ? (
+      {!validItems.length && cartLoaded ? (
         <NoItem />
       ) : (
         <div>
@@ -64,7 +75,7 @@ export default function Cart() {
                   />
                 ) : null}
                 <ul className="-my-6 divide-y divide-gray-200">
-                  {items.map((item) => (
+                  {validItems.map((item) => (
                     <li key={item.id} className="flex py-6">
                       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                         <img
@@ -78,12 +89,12 @@ export default function Cart() {
                         <div>
                           <div className="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                              <Link to={`/product-detail/${item.product.id}`}>
+                              <Link to={`/product-detail/${item.product.id || item.product._id}`}>
                                 {item.product.title}
                               </Link>
                             </h3>
                             <p className="ml-4">
-                              ₹ {item.product.discountedPrice}
+                              ₹ {getDiscountedPrice(item.product)}
                             </p>
                           </div>
                           <p className="mt-1 text-sm text-gray-500">

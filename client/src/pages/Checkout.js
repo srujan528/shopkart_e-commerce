@@ -42,11 +42,22 @@ function Checkout() {
     formState: { errors },
   } = useForm();
 
-  const totalAmount = items.reduce(
-    (amount, item) => item.product.discountedPrice * item.quantity + amount,
+  const getDiscountedPrice = (product) => {
+    if (!product) return 0;
+    if (typeof product.discountedPrice === "number") return product.discountedPrice;
+    if (typeof product.price === "number") {
+      return Math.round(product.price * (1 - (product.discountPercentage || 0) / 100));
+    }
+    return 0;
+  };
+
+  const validItems = items.filter((item) => item && item.product);
+
+  const totalAmount = validItems.reduce(
+    (amount, item) => getDiscountedPrice(item.product) * (item.quantity || 1) + amount,
     0
   );
-  const totalItems = items.reduce((total, item) => item.quantity + total, 0);
+  const totalItems = validItems.reduce((total, item) => (item.quantity || 0) + total, 0);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(null);

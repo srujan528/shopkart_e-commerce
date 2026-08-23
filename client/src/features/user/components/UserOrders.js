@@ -87,7 +87,7 @@ export default function UserOrders() {
                     <h3 className="my-5 font-bold tracking-tight text-red-900">
                       Payment Method :{" "}
                       <span className="font-bold text-green-500 bg-green-200 px-2 py-1 rounded-md">
-                        {capitalizeFirstLetter(order.payment.paymentMethod)}
+                        {capitalizeFirstLetter(order?.payment?.paymentMethod || order?.paymentMethod || "Cash")}
                       </span>
                     </h3>
                   </div>
