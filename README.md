@@ -34,17 +34,11 @@ This project was built with **React, Redux Toolkit, Node.js, Express, MongoDB At
 
 ## 📸 ShopKart Application Screenshots
 
-### 🏠 Homepage & Interactive Mega Deal Slider
+### 🏠 ShopKart Homepage & Interactive Mega Deal Slider
 ![ShopKart Homepage](./docs/screenshots/homepage.png)
 
-### 🔍 Product Detail View (Hover Magnify Lens & Specs Table)
+### 🔍 Product Detail View (Hover Magnify Lens & Specifications)
 ![ShopKart Product Detail](./docs/screenshots/product_detail.png)
-
-### 🛒 Checkout & Delivery Address Summary
-![ShopKart Checkout](./docs/screenshots/checkout.png)
-
-### 📦 Order Details & Real-Time Tracking
-![ShopKart Order Detail](./docs/screenshots/order_detail.png)
 
 ---
 
