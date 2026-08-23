@@ -4,6 +4,7 @@ import {
   updateUser,
   fetchLoggedInUser,
 } from "./userAPI";
+import { signOutAsync } from "../auth/authSlice";
 
 const initialState = {
   userOrders: [],
@@ -67,6 +68,11 @@ export const userSlice = createSlice({
         state.status = "idle";
         // this info can be different or more from logged-in User info
         state.userInfo = action.payload;
+      })
+      .addCase(signOutAsync.fulfilled, (state) => {
+        state.status = "idle";
+        state.userInfo = null;
+        state.userOrders = [];
       });
   },
 });

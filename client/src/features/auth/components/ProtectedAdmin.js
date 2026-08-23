@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { selectLoggedInUser, selectUserChecked } from "../authSlice";
+import { selectLoggedInUser } from "../authSlice";
 import { selectUserInfo } from "../../user/userSlice";
 
 function ProtectedAdmin({ children }) {
