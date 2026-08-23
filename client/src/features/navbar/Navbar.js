@@ -217,12 +217,20 @@ function NavBar({ children }) {
 
                       {/* Admin Links if admin */}
                       {userInfo?.role === "admin" && (
-                        <Link
-                          to="/admin"
-                          className="text-xs font-semibold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 hover:bg-rose-100 transition-colors"
-                        >
-                          Admin Panel
-                        </Link>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            to="/admin"
+                            className="text-xs font-bold text-white bg-rose-600 px-3 py-1.5 rounded-lg shadow-xs hover:bg-rose-700 transition-colors flex items-center gap-1.5"
+                          >
+                            👑 Admin Dashboard
+                          </Link>
+                          <Link
+                            to="/admin/Orders"
+                            className="text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors hidden sm:flex items-center gap-1.5"
+                          >
+                            📦 Orders Panel
+                          </Link>
+                        </div>
                       )}
                     </div>
 
@@ -284,9 +292,54 @@ function NavBar({ children }) {
                           >
                             <Menu.Items className="absolute right-0 z-20 mt-2 w-52 origin-top-right rounded-xl bg-white py-1.5 shadow-2xl ring-1 ring-black/10 focus:outline-none divide-y divide-gray-100">
                               <div className="px-4 py-2.5">
-                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Signed in as</p>
+                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                  Signed in as {userInfo?.role === "admin" ? "(Admin)" : ""}
+                                </p>
                                 <p className="text-sm font-bold text-gray-900 truncate mt-0.5">{userInfo.name || userInfo.email}</p>
                               </div>
+                              {userInfo?.role === "admin" && (
+                                <div className="py-1 bg-rose-50/60 border-b border-rose-100">
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <Link
+                                        to="/admin"
+                                        className={classNames(
+                                          active ? "bg-rose-100 text-rose-700 font-bold" : "text-rose-600 font-semibold",
+                                          "block px-4 py-2 text-xs transition-colors"
+                                        )}
+                                      >
+                                        👑 Admin Dashboard
+                                      </Link>
+                                    )}
+                                  </Menu.Item>
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <Link
+                                        to="/admin/product-form"
+                                        className={classNames(
+                                          active ? "bg-rose-100 text-rose-700 font-bold" : "text-rose-600 font-semibold",
+                                          "block px-4 py-2 text-xs transition-colors"
+                                        )}
+                                      >
+                                        ➕ Add New Product
+                                      </Link>
+                                    )}
+                                  </Menu.Item>
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <Link
+                                        to="/admin/Orders"
+                                        className={classNames(
+                                          active ? "bg-rose-100 text-rose-700 font-bold" : "text-rose-600 font-semibold",
+                                          "block px-4 py-2 text-xs transition-colors"
+                                        )}
+                                      >
+                                        📦 Manage Orders
+                                      </Link>
+                                    )}
+                                  </Menu.Item>
+                                </div>
+                              )}
                               <div className="py-1">
                                 {userNavigation.map((item) => (
                                   <Menu.Item key={item.name}>
