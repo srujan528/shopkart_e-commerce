@@ -15,70 +15,82 @@ if (process.platform === "win32") {
 const PRIMARY_ATLAS_URI =
   "mongodb+srv://srujanhiremath519_db_user:srujan%40123@placementportal.rkhdyck.mongodb.net/shopkart?appName=PlacementPortal";
 
+let isConnectingPromise = null;
+
 // Connect to MongoDB
 async function connectDB() {
-  if (mongoose.connection.readyState >= 1) {
+  if (mongoose.connection.readyState === 1) {
     return;
   }
-  
-  mongoose.set("bufferCommands", false);
-
-  const envUri =
-    process.env.MONGO_URL ||
-    process.env.MONGODB_URL ||
-    process.env.DATABASE_URL;
-
-  const mongoUri =
-    envUri && envUri.startsWith("mongodb") ? envUri : PRIMARY_ATLAS_URI;
-
-  try {
-    await mongoose.connect(mongoUri, {
-      dbName: "shopkart",
-      serverSelectionTimeoutMS: 5000,
-    });
-    console.log("Connected to MongoDB Atlas");
-  } catch (error) {
-    console.error("Primary connection error, retrying Atlas fallback:", error.message);
-    try {
-      await mongoose.connect(PRIMARY_ATLAS_URI, {
-        dbName: "shopkart",
-        serverSelectionTimeoutMS: 5000,
-      });
-      console.log("Connected to Fallback MongoDB Atlas");
-    } catch (fallbackError) {
-      console.error("MongoDB fallback connection error:", fallbackError.message);
-      return;
-    }
+  if (isConnectingPromise) {
+    await isConnectingPromise;
+    return;
   }
 
-  // Auto-ensure Admin User exists in connected database
-  try {
-    const adminEmail = "admin@gmail.com";
-    const adminPassword = "admin1234";
+  isConnectingPromise = (async () => {
+    const envUri =
+      process.env.MONGO_URL ||
+      process.env.MONGODB_URL ||
+      process.env.DATABASE_URL;
 
-    const adminUser = await User.findOne({ email: adminEmail });
-    if (!adminUser) {
-      const salt = crypto.randomBytes(16);
-      const hashedPassword = await new Promise((resolve, reject) => {
-        crypto.pbkdf2(adminPassword, salt, 310000, 32, "sha256", (err, key) => {
-          if (err) reject(err);
-          else resolve(key);
+    const mongoUri =
+      envUri && envUri.startsWith("mongodb") ? envUri : PRIMARY_ATLAS_URI;
+
+    try {
+      await mongoose.connect(mongoUri, {
+        dbName: "shopkart",
+        serverSelectionTimeoutMS: 8000,
+      });
+      console.log("Connected to MongoDB Atlas");
+    } catch (error) {
+      console.error("Primary connection error, retrying Atlas fallback:", error.message);
+      try {
+        await mongoose.connect(PRIMARY_ATLAS_URI, {
+          dbName: "shopkart",
+          serverSelectionTimeoutMS: 8000,
         });
-      });
-
-      await User.create({
-        name: "ShopKart Admin",
-        email: adminEmail,
-        password: hashedPassword,
-        salt: salt,
-        role: "admin",
-        phoneNumber: "9999999999",
-        addresses: [],
-      });
-      console.log("Auto-seeded admin user: admin@gmail.com / admin1234");
+        console.log("Connected to Fallback MongoDB Atlas");
+      } catch (fallbackError) {
+        console.error("MongoDB fallback connection error:", fallbackError.message);
+        return;
+      }
     }
-  } catch (seedErr) {
-    console.log("Admin auto-seed notice:", seedErr.message);
+
+    // Auto-ensure Admin User exists in connected database
+    try {
+      const adminEmail = "admin@gmail.com";
+      const adminPassword = "admin1234";
+
+      const adminUser = await User.findOne({ email: adminEmail });
+      if (!adminUser) {
+        const salt = crypto.randomBytes(16);
+        const hashedPassword = await new Promise((resolve, reject) => {
+          crypto.pbkdf2(adminPassword, salt, 310000, 32, "sha256", (err, key) => {
+            if (err) reject(err);
+            else resolve(key);
+          });
+        });
+
+        await User.create({
+          name: "ShopKart Admin",
+          email: adminEmail,
+          password: hashedPassword,
+          salt: salt,
+          role: "admin",
+          phoneNumber: "9999999999",
+          addresses: [],
+        });
+        console.log("Auto-seeded admin user: admin@gmail.com / admin1234");
+      }
+    } catch (seedErr) {
+      console.log("Admin auto-seed notice:", seedErr.message);
+    }
+  })();
+
+  try {
+    await isConnectingPromise;
+  } finally {
+    isConnectingPromise = null;
   }
 }
 
