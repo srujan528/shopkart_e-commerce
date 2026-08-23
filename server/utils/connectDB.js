@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import dns from "dns";
 import crypto from "crypto";
+import User from "../models/User.Model.js";
 
 // Fix for Node.js c-ares DNS resolver on Windows when querying MongoDB Atlas SRV records
 if (process.platform === "win32") {
@@ -30,27 +31,29 @@ async function connectDB() {
 
     // Auto-ensure Admin User exists in whatever database is connected
     try {
-      const User = mongoose.model("User");
       const adminEmail = "admin@gmail.com";
       const adminPassword = "admin1234";
 
       const adminUser = await User.findOne({ email: adminEmail });
       if (!adminUser) {
         const salt = crypto.randomBytes(16);
-        crypto.pbkdf2(adminPassword, salt, 310000, 32, "sha256", async (err, hashedPassword) => {
-          if (!err) {
-            await User.create({
-              name: "ShopKart Admin",
-              email: adminEmail,
-              password: hashedPassword,
-              salt: salt,
-              role: "admin",
-              phoneNumber: "9999999999",
-              addresses: [],
-            });
-            console.log("Auto-seeded admin user: admin@gmail.com / admin1234");
-          }
+        const hashedPassword = await new Promise((resolve, reject) => {
+          crypto.pbkdf2(adminPassword, salt, 310000, 32, "sha256", (err, key) => {
+            if (err) reject(err);
+            else resolve(key);
+          });
         });
+
+        await User.create({
+          name: "ShopKart Admin",
+          email: adminEmail,
+          password: hashedPassword,
+          salt: salt,
+          role: "admin",
+          phoneNumber: "9999999999",
+          addresses: [],
+        });
+        console.log("Auto-seeded admin user: admin@gmail.com / admin1234");
       }
     } catch (seedErr) {
       console.log("Admin auto-seed notice:", seedErr.message);
