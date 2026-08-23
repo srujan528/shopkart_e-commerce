@@ -12,7 +12,7 @@ function Home() {
   const user = useSelector(selectLoggedInUser);
   const userInfo = useSelector(selectUserInfo);
 
-  const role = userInfo?.role || user?.role;
+  const role = userInfo?.role || user?.role || user?.data?.role;
 
   useEffect(() => {
     dispatch(resetUserError());

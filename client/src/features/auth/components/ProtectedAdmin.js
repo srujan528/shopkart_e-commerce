@@ -11,7 +11,7 @@ function ProtectedAdmin({ children }) {
     return <Navigate to="/login" replace={true}></Navigate>;
   }
 
-  const role = userInfo?.role || user?.role;
+  const role = userInfo?.role || user?.role || user?.data?.role;
 
   if (role && role !== "admin") {
     return <Navigate to="/" replace={true}></Navigate>;
