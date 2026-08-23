@@ -1,21 +1,22 @@
-# 🛒 E-Commerce Platform
+# 🛍️ ShopKart E-Commerce Platform
 
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)
-![React](https://img.shields.io/badge/React-18-blue?style=flat-square&logo=react)
-![Node.js](https://img.shields.io/badge/Node.js-18-green?style=flat-square&logo=node.js)
-![MongoDB](https://img.shields.io/badge/MongoDB-8.6-brightgreen?style=flat-square&logo=mongodb)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwindcss)
-![Razorpay](https://img.shields.io/badge/Razorpay-Payments-blue?style=flat-square&logo=razorpay)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_ShopKart-2563eb?style=for-the-badge&logo=vercel)](https://shopkart-e-commerce-git-main-srs-projects-82e6c9a5.vercel.app)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-18-green?style=for-the-badge&logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen?style=for-the-badge&logo=mongodb)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwindcss)
+
+🌐 **Live Website**: [https://shopkart-e-commerce-git-main-srs-projects-82e6c9a5.vercel.app](https://shopkart-e-commerce-git-main-srs-projects-82e6c9a5.vercel.app)
 
 ---
 
 ## 📖 About The Project
 
-**E-Commerce Platform** is a modern full-stack web application built for **online shopping**.  
-It allows customers to **browse products, add to cart, and place secure orders**, while admins can **manage inventory, users, and transactions**.
+**ShopKart** is a modern, high-performance full-stack e-commerce web application built for **online shopping**.  
+It allows customers to **browse mega deal sliders, filter by category & brand, search products, magnify product images, add to cart, and place secure orders**, while admins can **manage product inventory, users, and orders**.
 
-This project was built with **React, Node.js, Express, MongoDB, and TailwindCSS** for scalability, speed, and flexibility.
+This project was built with **React, Redux Toolkit, Node.js, Express, MongoDB Atlas, and TailwindCSS** for speed, responsiveness, and premium UX.
 
 ---
 
