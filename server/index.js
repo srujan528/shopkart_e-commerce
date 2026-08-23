@@ -30,10 +30,14 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "shopkart_jwt_secret_key_2026";
 const SESSION_SECRET = process.env.SESSION_SECRET || "shopkart_session_secret_key_2026";
+const PORT = process.env.PORT || 8080;
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || true,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      return callback(null, origin);
+    },
     credentials: true,
   })
 );
@@ -152,9 +156,9 @@ passport.deserializeUser(function (user, cb) {
 
 connectDB();
 
-if (process.env.PORT && !process.env.VERCEL) {
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 }
 
