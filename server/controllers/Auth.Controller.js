@@ -53,16 +53,20 @@ export const createUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
+    const user = req.user;
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
     const isProduction = process.env.NODE_ENV === "production";
     res
-      .cookie("jwt", req.user.token, {
+      .cookie("jwt", user.token, {
         expires: new Date(Date.now() + 86400000),
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? "None" : "Lax",
       })
       .status(201)
-      .json({ id: req.user.id, role: req.user.role, token: req.user.token });
+      .json({ id: user.id, role: user.role, token: user.token });
   } catch (error) {
     if (!res.headersSent) {
       return res.status(500).json({ message: "Internal Server Error" });

@@ -93,7 +93,7 @@ passport.use(
     try {
       const user = await User.findOne({ email: email });
 
-      if (!user) {
+      if (!user || !user.salt || !user.password) {
         return done(null, false, { message: "Incorrect email or password" });
       }
 
@@ -104,16 +104,30 @@ passport.use(
         32,
         "sha256",
         function (err, hashedPassword) {
-          if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
-            return done(null, false, {
-              message: "Incorrect email or password",
-            });
-          } else {
-            const token = jwt.sign(sanitizeUser(user), JWT_SECRET, {
-              expiresIn: "24h",
-            });
+          if (err) {
+            return done(err);
+          }
+          try {
+            const userPasswordBuf = Buffer.isBuffer(user.password)
+              ? user.password
+              : Buffer.from(user.password);
 
-            return done(null, { id: user.id, role: user?.role, token });
+            if (
+              userPasswordBuf.length !== hashedPassword.length ||
+              !crypto.timingSafeEqual(userPasswordBuf, hashedPassword)
+            ) {
+              return done(null, false, {
+                message: "Incorrect email or password",
+              });
+            } else {
+              const token = jwt.sign(sanitizeUser(user), JWT_SECRET, {
+                expiresIn: "24h",
+              });
+
+              return done(null, { id: user.id, role: user?.role, token });
+            }
+          } catch (e) {
+            return done(null, false, { message: "Incorrect email or password" });
           }
         }
       );
